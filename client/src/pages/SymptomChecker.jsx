@@ -8,6 +8,8 @@ import Loader from '../components/ui/Loader';
 import SymptomForm from '../components/symptoms/SymptomForm';
 import AnalysisResult from '../components/symptoms/AnalysisResult';
 import EmergencyAlert from '../components/symptoms/EmergencyAlert';
+import BackgroundWrapper from '../components/ui/BackgroundWrapper';
+import GradientText from '../components/ui/GradientText';
 import { analyzeSymptoms } from '../services/api';
 
 const SymptomChecker = () => {
@@ -87,7 +89,7 @@ const SymptomChecker = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <BackgroundWrapper>
       {/* Emergency Alert */}
       {showEmergency && (
         <EmergencyAlert onClose={() => setShowEmergency(false)} />
@@ -103,8 +105,8 @@ const SymptomChecker = () => {
             <div className="inline-flex items-center justify-center p-3 bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl mb-4 shadow-lg shadow-blue-500/10">
               <Activity className="w-8 h-8 text-cyan-400" />
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
-              {t('symptoms.title')}
+            <h1 className="text-3xl sm:text-4xl font-bold mb-3 tracking-tight">
+              <GradientText>{t('symptoms.title')}</GradientText>
             </h1>
             <p className="text-lg text-gray-300 max-w-xl mx-auto leading-relaxed">
               {t('symptoms.subtitle')}
@@ -117,7 +119,7 @@ const SymptomChecker = () => {
       <section className="pb-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <Card className="backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
+            <Card className="backdrop-blur-xl bg-gray-900/40 border border-[#00ffa3]/20 shadow-[0_0_30px_rgba(0,255,163,0.1)]">
               <Loader message={t('symptoms.loading')} size="default" />
             </Card>
           ) : result ? (
@@ -134,13 +136,13 @@ const SymptomChecker = () => {
               </div>
             </div>
           ) : (
-            <Card className="backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
+            <Card className="backdrop-blur-xl bg-gray-900/40 border border-[#00f0ff]/20 shadow-[0_0_30px_rgba(0,240,255,0.1)] overflow-hidden">
               <SymptomForm onSubmit={handleSubmit} loading={loading} />
             </Card>
           )}
         </div>
       </section>
-    </div>
+    </BackgroundWrapper>
   );
 };
 

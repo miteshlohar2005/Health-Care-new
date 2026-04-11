@@ -14,7 +14,7 @@ const Select = forwardRef(({
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-200 mb-2">
+        <label className="block text-sm font-medium text-gray-200 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -26,24 +26,24 @@ const Select = forwardRef(({
           className={`
             w-full px-4 py-3 pr-10
             border rounded-xl
-            bg-white/5 text-white
-            border-white/10
+            bg-white/10 text-white
+            border-white/20
             transition-all duration-200
             focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent
             appearance-none cursor-pointer
-            hover:border-white/20
+            hover:border-white/30
             ${error
-              ? 'border-red-500/50 focus:ring-red-500/50 bg-red-900/10'
+              ? 'border-red-500/50 bg-red-900/10 focus:ring-red-500/50'
               : ''
             }
           `}
           {...props}
         >
-          <option value="" disabled className="bg-slate-900 text-gray-300">
+          <option value="" disabled className="bg-gray-900 text-gray-400">
             {placeholder}
           </option>
           {options.map((option) => (
-            <option key={option.value} value={option.value} className="bg-slate-900 text-white">
+            <option key={option.value} value={option.value} className="bg-gray-900 text-white">
               {option.label}
             </option>
           ))}
@@ -55,7 +55,7 @@ const Select = forwardRef(({
       </div>
 
       {(error || helperText) && (
-        <p className={`mt-2 text-sm ${error ? 'text-red-600' : 'text-gray-500'}`}>
+        <p className={`mt-2 text-sm ${error ? 'text-red-400' : 'text-gray-400'}`}>
           {error || helperText}
         </p>
       )}

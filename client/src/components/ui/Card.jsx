@@ -27,9 +27,9 @@ const Card = ({
   return (
     <Component
       className={`
-        bg-white rounded-2xl border border-gray-100 
+        bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 
         ${paddingStyles[padding]}
-        ${hover ? 'hover:shadow-xl hover:border-blue-100' : 'shadow-sm'} 
+        ${hover ? 'hover:shadow-[0_0_30px_rgba(0,255,163,0.15)] hover:border-white/20 hover:bg-white/10' : 'shadow-xl shadow-black/20'} 
         transition-all duration-300 
         ${className}
       `}

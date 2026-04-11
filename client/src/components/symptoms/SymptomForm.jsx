@@ -139,7 +139,7 @@ const SymptomForm = ({ onSubmit, loading }) => {
       </Button>
 
       {/* Privacy Notice */}
-      <p className="text-sm text-[var(--color-text-secondary)] text-center">
+      <p className="text-sm text-gray-400 text-center">
         {t('symptoms.form.privacy')}
       </p>
     </motion.form>

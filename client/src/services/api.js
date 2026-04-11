@@ -72,7 +72,7 @@ export const submitFollowUp = async (data) => {
  * @returns {Promise<Object>} Hospital list
  */
 export const findNearestHospitals = async (data) => {
-  const response = await api.post('/api/nearest-hospitals', data);
+  const response = await api.post('/api/hospitals/nearest-hospitals', data);
   return response.data;
 };
 

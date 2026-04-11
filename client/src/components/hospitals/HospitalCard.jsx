@@ -6,12 +6,13 @@ import Button from '../ui/Button';
 
 const HospitalCard = ({ hospital, index, userLocation }) => {
   const { t } = useTranslation();
-  const { name, address, distance_km, latitude, longitude, phone } = hospital;
+  const { name, address, distance, latitude, longitude, phone } = hospital;
 
   // Distance color coding
   const getDistanceColor = () => {
-    if (distance_km < 5) return 'bg-green-900/20 text-green-400 border-green-800';
-    if (distance_km < 10) return 'bg-amber-900/20 text-amber-400 border-amber-800';
+    if (!distance) return 'bg-gray-900/20 text-gray-400 border-gray-800';
+    if (distance < 5) return 'bg-green-900/20 text-green-400 border-green-800';
+    if (distance < 10) return 'bg-amber-900/20 text-amber-400 border-amber-800';
     return 'bg-red-900/20 text-red-400 border-red-800';
   };
 
@@ -47,12 +48,15 @@ const HospitalCard = ({ hospital, index, userLocation }) => {
 
               {/* Distance Badge */}
               <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold border whitespace-nowrap ${getDistanceColor()}`}>
-                {distance_km.toFixed(1)} km
+                Distance: {distance?.toFixed(2)} km
               </span>
             </div>
 
-            <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+            <p className="text-gray-300 text-sm mb-2 line-clamp-2">
               {address}
+            </p>
+            <p className="text-teal-300 text-sm font-medium mb-4">
+              Distance: {hospital.distance?.toFixed(2)} km
             </p>
 
             {/* Coordinates */}

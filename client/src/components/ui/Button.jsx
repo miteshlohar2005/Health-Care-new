@@ -23,10 +23,11 @@ const Button = ({
 
   const variants = {
     primary: `
-      bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-500 hover:to-cyan-400
-      focus-visible:ring-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] 
-      hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] border border-cyan-400/20
-      relative after:absolute after:inset-0 after:rounded-xl after:ring-2 after:ring-white/20 after:animate-pulse
+      bg-gradient-to-r from-[#00f0ff] to-[#00ffa3] text-white font-bold 
+      hover:from-teal-400 hover:to-blue-400
+      focus-visible:ring-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.6)] 
+      hover:shadow-[0_0_30px_rgba(0,255,163,0.8)] border border-white/20
+      relative after:absolute after:inset-0 after:rounded-xl after:ring-2 after:ring-white/40 after:animate-pulse
     `,
     secondary: `
       bg-gradient-to-r from-teal-600 to-teal-500 text-white hover:from-teal-500 hover:to-teal-400

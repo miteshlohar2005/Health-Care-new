@@ -7,6 +7,8 @@ import Card from '../components/ui/Card';
 import Loader from '../components/ui/Loader';
 import ImageUpload from '../components/image/ImageUpload';
 import ImageAnalysisResult from '../components/image/ImageAnalysisResult';
+import BackgroundWrapper from '../components/ui/BackgroundWrapper';
+import GradientText from '../components/ui/GradientText';
 import { analyzeImage } from '../services/api';
 
 const ImageAnalysis = () => {
@@ -56,7 +58,7 @@ const ImageAnalysis = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <BackgroundWrapper>
       {/* Header */}
       <section className="relative pt-8 sm:pt-12 pb-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -67,8 +69,8 @@ const ImageAnalysis = () => {
             <div className="inline-flex items-center justify-center p-3 bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl mb-4 shadow-lg shadow-purple-500/10">
               <Camera className="w-8 h-8 text-purple-400" />
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
-              {t('image_analysis.title')}
+            <h1 className="text-3xl sm:text-4xl font-bold mb-3 tracking-tight">
+              <GradientText>{t('image_analysis.title')}</GradientText>
             </h1>
             <p className="text-lg text-gray-300 max-w-xl mx-auto leading-relaxed">
               {t('image_analysis.subtitle')}
@@ -81,7 +83,7 @@ const ImageAnalysis = () => {
       <section className="pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <Card className="backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
+            <Card className="backdrop-blur-xl bg-gray-900/40 border border-[#00f0ff]/20 shadow-[0_0_30px_rgba(0,240,255,0.1)]">
               <Loader message={t('image_analysis.loading')} size="default" />
             </Card>
           ) : result ? (
@@ -98,13 +100,13 @@ const ImageAnalysis = () => {
               </div>
             </div>
           ) : (
-            <Card className="backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
+            <Card className="backdrop-blur-xl bg-gray-900/40 border border-[#00f0ff]/20 shadow-[0_0_30px_rgba(0,255,163,0.1)] overflow-hidden">
               <ImageUpload onSubmit={handleSubmit} loading={loading} />
             </Card>
           )}
         </div>
       </section>
-    </div>
+    </BackgroundWrapper>
   );
 };
 

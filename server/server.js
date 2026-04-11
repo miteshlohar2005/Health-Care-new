@@ -7,8 +7,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const config = require('./config');
-const csvLoader = require('./services/csvLoader');
-
+const supabase = require('./config/supabaseClient');
 // Import routes
 const symptomsRouter = require('./routes/symptoms');
 const hospitalsRouter = require('./routes/hospitals');
@@ -40,18 +39,24 @@ app.use((req, res, next) => {
 // ================================
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
+  let dbStatus = 'disconnected';
+  if (supabase) {
+    const { error } = await supabase.from('hospitals').select('id').limit(1);
+    dbStatus = error ? 'error' : 'connected';
+  }
+
   res.json({
     status: 'ok',
     message: 'Rural Healthcare AI Backend is running',
     timestamp: new Date().toISOString(),
-    hospitalsLoaded: csvLoader.getHospitalCount()
+    database: dbStatus
   });
 });
 
 // API routes
 app.use('/api', symptomsRouter);
-app.use('/api', hospitalsRouter);
+app.use('/api/hospitals', hospitalsRouter);
 app.use('/api', imagesRouter);
 
 // Root endpoint
@@ -102,10 +107,18 @@ const startServer = async () => {
     console.log('Starting Rural Healthcare AI Backend...');
     console.log('=================================\n');
     
-    // Load hospital data from CSV
-    console.log('📋 Loading hospital directory...');
-    await csvLoader.loadHospitals();
-    console.log(`✅ Loaded ${csvLoader.getHospitalCount()} hospitals from CSV\n`);
+    // Check Supabase connection
+    console.log('🔗 Checking Supabase database connection...');
+    if (supabase) {
+      const { error } = await supabase.from('hospitals').select('id').limit(1);
+      if (error) {
+        console.warn(`⚠️ Connected to Supabase, but failed to fetch hospitals table: ${error.message}`);
+      } else {
+        console.log(`✅ Successfully connected to Supabase database (hospitals table found)\n`);
+      }
+    } else {
+      console.warn('⚠️ Supabase client not initialized. Check your .env variables!\n');
+    }
     
     // Start Express server
     const PORT = config.PORT;
@@ -113,7 +126,7 @@ const startServer = async () => {
       console.log('=================================');
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📍 Environment: ${config.NODE_ENV}`);
-      console.log(`🏥 Hospital data: Ready`);
+      console.log(`🏥 Hospital Database: ${supabase ? 'Connected' : 'NOT CONFIGURED'}`);
       console.log(`🤖 Gemini API: ${config.GEMINI_API_KEY ? 'Configured' : 'NOT CONFIGURED'}`);
       console.log('=================================\n');
       console.log(`Access the API at: http://localhost:${PORT}`);
