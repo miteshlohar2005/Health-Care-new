@@ -1,16 +1,17 @@
-import axios from 'axios';
+import axios from "axios";
 
-// API Base URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// Base URL from Vercel env
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-// Create Axios instance with default config
+// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-  timeout: 60000, // 60 seconds for AI processing
+  timeout: 60000,
 });
+
 
 // Request interceptor
 api.interceptors.request.use(
