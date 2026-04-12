@@ -2,7 +2,11 @@
  * Rural Healthcare AI Screening Platform - Backend Server
  * Main entry point for the Express application
  */
+import cors from "cors";
 
+app.use(cors({
+  origin: "*"
+}));
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -14,6 +18,11 @@ const hospitalsRouter = require('./routes/hospitals');
 const imagesRouter = require('./routes/images');
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 // ================================
 // MIDDLEWARE CONFIGURATION
