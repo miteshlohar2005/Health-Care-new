@@ -15,9 +15,11 @@ class GeminiService {
       this.visionModel = null;
     } else {
       this.genAI = new GoogleGenerativeAI(config.GEMINI_API_KEY);
-      // Gemini 2.5 Flash supports both text and vision
-      this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-      this.visionModel = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+      // Primary: gemini-1.5-flash (stable), fallback: gemini-1.5-pro
+      this.modelName = 'gemini-1.5-flash';
+      this.fallbackModelName = 'gemini-1.5-pro';
+      this.model = this.genAI.getGenerativeModel({ model: this.modelName });
+      this.visionModel = this.genAI.getGenerativeModel({ model: this.modelName });
     }
 
     // System prompt with medical safety guardrails
@@ -64,6 +66,36 @@ FORMAT YOUR RESPONSE AS JSON with these fields:
 }
 
 Remember: When in doubt, recommend medical consultation.`;
+  }
+
+  /**
+   * Generate content with automatic retry and model fallback on 503
+   */
+  async generateWithRetry(parts, useVision = false) {
+    const maxRetries = 2;
+    const models = [this.modelName, this.fallbackModelName];
+
+    for (const modelName of models) {
+      const model = this.genAI.getGenerativeModel({ model: modelName });
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const result = await model.generateContent(parts);
+          return result;
+        } catch (err) {
+          const is503 = err.message?.includes('503') || err.message?.includes('Service Unavailable') || err.message?.includes('overloaded');
+          if (is503 && attempt < maxRetries) {
+            console.warn(`Model ${modelName} returned 503, retrying (${attempt}/${maxRetries})...`);
+            await new Promise(r => setTimeout(r, 1500 * attempt));
+            continue;
+          }
+          if (is503 && modelName !== this.fallbackModelName) {
+            console.warn(`Model ${modelName} unavailable, switching to fallback...`);
+            break; // try next model
+          }
+          throw err;
+        }
+      }
+    }
   }
 
   /**
@@ -118,8 +150,8 @@ However, you MUST keep the JSON property keys (possible_causes, severity, care_a
 `;
 
     try {
-      // Generate content with safety settings
-      const result = await this.model.generateContent([
+      // Generate content with retry and fallback
+      const result = await this.generateWithRetry([
         this.systemPrompt,
         userPrompt
       ]);
@@ -201,7 +233,7 @@ However, you MUST keep the JSON property keys in English. Only translate the val
 `;
 
     try {
-      const result = await this.model.generateContent([
+      const result = await this.generateWithRetry([
         this.systemPrompt,
         userPrompt
       ]);
@@ -293,7 +325,7 @@ However, you MUST keep the JSON property keys in English. Only translate the val
         }
       };
 
-      const result = await this.visionModel.generateContent([imagePrompt, imagePart]);
+      const result = await this.generateWithRetry([imagePrompt, imagePart]);
       const response = result.response;
       const text = response.text();
 
